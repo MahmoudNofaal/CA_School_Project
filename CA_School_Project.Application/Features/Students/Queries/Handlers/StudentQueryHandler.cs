@@ -11,13 +11,15 @@ using System.Text;
 
 namespace CA_School_Project.Application.Features.Students.Queries.Handlers;
 
-public class GetStudentListQueryHandler
-   : ResponseHandler, IQueryHandler<GetStudentListQuery, Response<IEnumerable<GetStudentListResponse>>>
+public class StudentQueryHandler
+   : ResponseHandler,
+     IQueryHandler<GetStudentListQuery, Response<IEnumerable<GetStudentListResponse>>>,
+     IQueryHandler<GetStudentByIdQuery, Response<GetSingleStudentReponse>>
 {
    private readonly IStudentService _studentService;
    private readonly IMapper _mapper;
 
-   public GetStudentListQueryHandler(IStudentService studentService, IMapper mapper)
+   public StudentQueryHandler(IStudentService studentService, IMapper mapper)
    {
       this._studentService = studentService;
       this._mapper = mapper;
@@ -33,4 +35,18 @@ public class GetStudentListQueryHandler
       return Success(studentListResponse);
    }
 
+   public async Task<Response<GetSingleStudentReponse>> Handle
+      (GetStudentByIdQuery request, CancellationToken cancellationToken)
+   {
+      var student = await _studentService.GetByIdWithIncludeAsync(request.Id);
+
+      if (student is null)
+      {
+         return NotFound<GetSingleStudentReponse>($"Student with id: {request.Id} not found!");
+      }
+
+      var studentResponse = _mapper.Map<GetSingleStudentReponse>(student);
+
+      return Success(studentResponse);
+   }
 }

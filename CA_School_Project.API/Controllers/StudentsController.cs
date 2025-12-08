@@ -1,28 +1,64 @@
-﻿using CA_School_Project.Application.Features.Students.Queries.Models;
+﻿using CA_School_Project.API.Base;
+using CA_School_Project.API.MetaData;
+using CA_School_Project.Application.Features.Students.Commands.Models;
+using CA_School_Project.Application.Features.Students.Queries.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CA_School_Project.API.Controllers;
 
-[Route("api/[controller]")]
+//[Route("api/[controller]")]
 [ApiController]
-public class StudentsController : ControllerBase
+public class StudentsController : AppControllerBase
 {
-   private readonly IMediator _mediator;
 
-   public StudentsController(IMediator mediator)
-	{
-      this._mediator = mediator;
+
+   [HttpGet(StudentRoutes.GetList)]
+   public async Task<IActionResult> GetStudentsList()
+   {
+      var response = await Mediator.Send(new GetStudentListQuery());
+
+      //return Ok(response);
+      return NewResult(response);
    }
 
-   [HttpGet("list")]
-   public async Task<IActionResult> GetStudentsListAsync()
+
+   [HttpGet(StudentRoutes.GetById)]
+   public async Task<IActionResult> GetStudentById([FromRoute] int id)
    {
-      var response = await _mediator.Send(new GetStudentListQuery());
+      var response = await Mediator.Send(new GetStudentByIdQuery(id));
+
+      //return Ok(response);
+      return NewResult(response);
+   }
 
 
-      return Ok(response);
+   [HttpPost(StudentRoutes.Create)]
+   public async Task<IActionResult> CreateStudent([FromBody] AddStudentCommand command)
+   {
+      var response = await Mediator.Send(command);
+
+      //return Ok(response);
+      return NewResult(response);
+   }
+
+   [HttpPut(StudentRoutes.Edit)]
+   public async Task<IActionResult> EditStudent([FromBody] EditStudentCommand command)
+   {
+      var response = await Mediator.Send(command);
+
+      //return Ok(response);
+      return NewResult(response);
+   }
+
+   [HttpDelete(StudentRoutes.Delete)]
+   public async Task<IActionResult> DeleteStudent([FromRoute] int id)
+   {
+      var response = await Mediator.Send(new DeleteStudentCommand(id));
+
+      //return Ok(response);
+      return NewResult(response);
    }
 
 }

@@ -1,3 +1,4 @@
+using CA_School_Project.API.Middlewares;
 using CA_School_Project.Application;
 using CA_School_Project.Infrastructure;
 using CA_School_Project.Infrastructure.Context;
@@ -47,6 +48,8 @@ public class Program
          app.UseSwagger();
          app.UseSwaggerUI();
       }
+
+      app.UseMiddleware<ErrorHandlerMiddleware>();
 
       app.UseHttpsRedirection();
 

@@ -14,6 +14,9 @@ public partial class StudentProfile : Profile
 	{
 
 		this.GetStudentListMapping();
+		this.GetSingleStudentMapping();
+		this.AddStudentCommandMapping();
+		this.EditStudentCommandMapping();
 
    }
 

@@ -8,6 +8,13 @@ namespace CA_School_Project.Application.Services.Abstractions;
 public interface IStudentService
 {
 
-   public Task<List<Student>> GetStudentsListAsync();
+   Task<List<Student>> GetStudentsListAsync();
+   Task<Student> GetByIdWithIncludeAsync(int id);
+   Task<Student> GetByIdAsync(int id);
+   Task<bool> AddAsync(Student student);
+   Task<bool> EditAsync(Student student);
+   Task<bool> DeleteAsync(Student student);
+   Task<bool> IsNameExistsAsync(string name);
+   Task<bool> IsNameExistsExcludeSelfAsync(string name, int id);
 
 }

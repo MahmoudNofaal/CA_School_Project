@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CA_School_Project.Infrastructure.Abstractionss;
+namespace CA_School_Project.Infrastructure.Repositories.Abstractionss;
 
-public interface IStudentRepository
+public interface IStudentRepository : IGenericRepositoryAsync<Student>
 {
 
    Task<List<Student>> GetStudentsListAsync();
  
 }
+

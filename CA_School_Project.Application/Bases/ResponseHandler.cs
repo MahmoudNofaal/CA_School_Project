@@ -24,7 +24,7 @@ public class ResponseHandler
          Data = entity,
          StatusCode = System.Net.HttpStatusCode.OK,
          Succeeded = true,
-         Message = "Added Successfully",
+         Message = "Reponse Successfully",
          Meta = Meta
       };
    }
@@ -46,6 +46,16 @@ public class ResponseHandler
          StatusCode = System.Net.HttpStatusCode.BadRequest,
          Succeeded = false,
          Message = Message == null ? "Bad Request" : Message
+      };
+   }
+
+   public Response<T> UnprocessableEntity<T>(string message = null)
+   {
+      return new Response<T>()
+      {
+         StatusCode = System.Net.HttpStatusCode.UnprocessableEntity,
+         Succeeded = false,
+         Message = message == null ? "Unprocessable Entity" : message
       };
    }
 
