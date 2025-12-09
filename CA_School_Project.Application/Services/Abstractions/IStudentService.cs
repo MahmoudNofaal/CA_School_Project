@@ -1,4 +1,5 @@
 ﻿using CA_School_Project.Domain.Entities;
+using CA_School_Project.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,5 +17,8 @@ public interface IStudentService
    Task<bool> DeleteAsync(Student student);
    Task<bool> IsNameExistsAsync(string name);
    Task<bool> IsNameExistsExcludeSelfAsync(string name, int id);
+
+   IQueryable<Student> GetStudentsAsQueryable();
+   IQueryable<Student> FilterStudentPaginatedQuerable(StudentOrderingEnum orderBy, string search);
 
 }

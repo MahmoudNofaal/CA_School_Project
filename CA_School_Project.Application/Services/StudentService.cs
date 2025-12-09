@@ -1,5 +1,6 @@
 ﻿using CA_School_Project.Application.Services.Abstractions;
 using CA_School_Project.Domain.Entities;
+using CA_School_Project.Domain.Helpers;
 using CA_School_Project.Infrastructure.Repositories.Abstractionss;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -51,6 +52,37 @@ public class StudentService : IStudentService
       return true;
    }
 
+   public IQueryable<Student> FilterStudentPaginatedQuerable(StudentOrderingEnum orderBy, string search)
+   {
+     var querable = _studentRepository.GetTableAsNoTracking()
+                                      .Include(x => x.Department)
+                                      .AsQueryable();
+
+      querable = querable.Where(x => string.IsNullOrEmpty(search) ||
+                                     x.Name_En.Contains(search) ||
+                                     x.Address.Contains(search) ||
+                                     x.Phone.Contains(search) ||
+                                     (x.Department != null && x.Department.DName_En.Contains(search)));
+
+      switch (orderBy)
+      {
+         case StudentOrderingEnum.StudId:
+            querable = querable.OrderBy(x => x.StudID);
+            break;
+         case StudentOrderingEnum.Name:
+            querable = querable.OrderBy(x => x.Name_En);
+            break;
+         case StudentOrderingEnum.Address:
+            querable = querable.OrderBy(x => x.Address);
+            break;
+         case StudentOrderingEnum.DepartmentName:
+            querable = querable.OrderBy(x => x.Department.DName_En);
+            break;
+      }
+
+      return querable;
+   }
+
    public async Task<Student> GetByIdAsync(int id)
    {
       return await _studentRepository.GetByIdAsync(id);
@@ -65,6 +97,13 @@ public class StudentService : IStudentService
       return student;
    }
 
+   public IQueryable<Student> GetStudentsAsQueryable()
+   {
+      return _studentRepository.GetTableAsNoTracking()
+                               .Include(x => x.Department)
+                               .AsQueryable();
+   }
+
    public async Task<List<Student>> GetStudentsListAsync()
    {
       return await _studentRepository.GetStudentsListAsync();
@@ -73,12 +112,12 @@ public class StudentService : IStudentService
    public async Task<bool> IsNameExistsAsync(string name)
    {
       return await _studentRepository.GetTableAsNoTracking()
-                                     .AnyAsync(x => x.Name == name);
+                                     .AnyAsync(x => x.Name_En == name);
    }
 
    public async Task<bool> IsNameExistsExcludeSelfAsync(string name, int id)
    {
       return await _studentRepository.GetTableAsNoTracking()
-                                     .AnyAsync(x => x.Name == name && x.StudID != id);
+                                     .AnyAsync(x => x.Name_En == name && x.StudID != id);
    }
 }

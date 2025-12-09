@@ -2,8 +2,10 @@
 using CA_School_Project.Application.Bases;
 using CA_School_Project.Application.Bases.CQRS;
 using CA_School_Project.Application.Features.Students.Commands.Models;
+using CA_School_Project.Application.Resources;
 using CA_School_Project.Application.Services.Abstractions;
 using CA_School_Project.Domain.Entities;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +21,9 @@ public class StudentCommandHandler : ResponseHandler,
    private readonly IStudentService _studentService;
    private readonly IMapper _mapper;
 
-   public StudentCommandHandler(IStudentService studentService, IMapper mapper)
+   public StudentCommandHandler(IStudentService studentService,
+                                IMapper mapper,
+                                IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
    {
       this._studentService = studentService;
       this._mapper = mapper;
@@ -36,7 +40,7 @@ public class StudentCommandHandler : ResponseHandler,
       // 3. Return response
       if (result)
       {
-         return Success<string>("Student is added successfully");
+         return Success("Student is added successfully");
       }
       else
       {

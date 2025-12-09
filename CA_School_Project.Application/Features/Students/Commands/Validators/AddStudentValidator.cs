@@ -1,6 +1,8 @@
 ﻿using CA_School_Project.Application.Features.Students.Commands.Models;
+using CA_School_Project.Application.Resources;
 using CA_School_Project.Application.Services.Abstractions;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,19 +12,21 @@ namespace CA_School_Project.Application.Features.Students.Commands.Validators;
 public class AddStudentValidator : AbstractValidator<AddStudentCommand>
 {
    private readonly IStudentService _studentService;
+   private readonly IStringLocalizer<SharedResources> _stringLocalizer;
 
-   public AddStudentValidator(IStudentService studentService)
+   public AddStudentValidator(IStudentService studentService, IStringLocalizer<SharedResources> stringLocalizer)
 	{
       this._studentService = studentService;
+      this._stringLocalizer = stringLocalizer;
 
-		this.ApplyValidationRules();
+      this.ApplyValidationRules();
 		this.ApplyCustomValidations();
    }
 
 	public void ApplyValidationRules()
 	{
 		RuleFor(x => x.Name)
-			.NotEmpty().WithMessage("Student name is required.")
+			.NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
 			.NotNull().WithMessage("Student name cannot be null.")
          .MaximumLength(100).WithMessage("Student name must not exceed 100 characters.");
 

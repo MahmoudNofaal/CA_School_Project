@@ -15,7 +15,9 @@ public partial class Department
    public int DID { get; set; }
 
    [StringLength(500)]
-   public string DName { get; set; }
+   public string DName_Ar { get; set; }
+   [StringLength(500)]
+   public string DName_En { get; set; }
 
    public virtual ICollection<Student> Students { get; set; }
    public virtual ICollection<DepartmentSubject> DepartmentSubjects { get; set; }
