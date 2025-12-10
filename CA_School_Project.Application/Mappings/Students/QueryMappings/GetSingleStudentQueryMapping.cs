@@ -13,7 +13,7 @@ public partial class StudentProfile
    {
 
       CreateMap<Student, GetSingleStudentReponse>()
-         .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DName_En))
+         .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Localize(src.Department.Name_Ar, src.Department.Name_En)))
          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Localize(src.Name_Ar, src.Name_En)));
 
    }

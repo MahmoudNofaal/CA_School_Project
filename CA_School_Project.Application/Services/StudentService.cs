@@ -62,12 +62,12 @@ public class StudentService : IStudentService
                                      x.Name_En.Contains(search) ||
                                      x.Address.Contains(search) ||
                                      x.Phone.Contains(search) ||
-                                     (x.Department != null && x.Department.DName_En.Contains(search)));
+                                     (x.Department != null && x.Department.Name_En.Contains(search)));
 
       switch (orderBy)
       {
          case StudentOrderingEnum.StudId:
-            querable = querable.OrderBy(x => x.StudID);
+            querable = querable.OrderBy(x => x.Id);
             break;
          case StudentOrderingEnum.Name:
             querable = querable.OrderBy(x => x.Name_En);
@@ -76,7 +76,7 @@ public class StudentService : IStudentService
             querable = querable.OrderBy(x => x.Address);
             break;
          case StudentOrderingEnum.DepartmentName:
-            querable = querable.OrderBy(x => x.Department.DName_En);
+            querable = querable.OrderBy(x => x.Department.Name_En);
             break;
       }
 
@@ -92,7 +92,7 @@ public class StudentService : IStudentService
    {
       var student = _studentRepository.GetTableAsNoTracking()
                                       .Include(x => x.Department)
-                                      .FirstOrDefault(x => x.StudID == id);
+                                      .FirstOrDefault(x => x.Id == id);
 
       return student;
    }
@@ -101,6 +101,13 @@ public class StudentService : IStudentService
    {
       return _studentRepository.GetTableAsNoTracking()
                                .Include(x => x.Department)
+                               .AsQueryable();
+   }
+
+   public IQueryable<Student> GetStudentsByDepartmentIdAsQueryable(int departmentId)
+   {
+      return _studentRepository.GetTableAsNoTracking()
+                               .Where(x => x.DepartmentId == departmentId)
                                .AsQueryable();
    }
 
@@ -118,6 +125,7 @@ public class StudentService : IStudentService
    public async Task<bool> IsNameExistsExcludeSelfAsync(string name, int id)
    {
       return await _studentRepository.GetTableAsNoTracking()
-                                     .AnyAsync(x => x.Name_En == name && x.StudID != id);
+                                     .AnyAsync(x => x.Name_En == name && x.Id != id);
    }
 }
+

@@ -21,7 +21,6 @@ public class GenericRepositoryAsync<T> : IGenericRepositoryAsync<T> where T : cl
       return await _dbContext.Set<T>().FindAsync(id);
    }
 
-
    public IQueryable<T> GetTableAsNoTracking()
    {
       return _dbContext.Set<T>().AsNoTracking().AsQueryable();

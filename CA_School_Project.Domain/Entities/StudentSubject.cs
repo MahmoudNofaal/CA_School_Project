@@ -6,15 +6,18 @@ namespace CA_School_Project.Domain.Entities;
 public class StudentSubject
 {
    [Key]
-   public int StudSubID { get; set; }
+   public int StudentId { get; set; }
+   [Key]
+   public int SubjectId { get; set; }
 
-   public int StudID { get; set; }
-   public int SubID { get; set; }
+   public decimal? Grade { get; set; }
 
-   [ForeignKey("StudID")]
-   public virtual Student Student { get; set; }
+   [ForeignKey(nameof(StudentId))]
+   [InverseProperty(nameof(Entities.Student.StudentSubject))]
+   public virtual Student? Student { get; set; }
 
-   [ForeignKey("SubID")]
-   public virtual Subject Subject { get; set; }
+   [ForeignKey(nameof(SubjectId))]
+   [InverseProperty(nameof(Entities.Subject.StudentsSubjects))]
+   public virtual Subject? Subject { get; set; }
 
 }

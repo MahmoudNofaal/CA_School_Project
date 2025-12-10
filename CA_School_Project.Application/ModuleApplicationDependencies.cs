@@ -16,6 +16,7 @@ public static class ModuleApplicationDependencies
    public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
    {
       services.AddTransient<IStudentService, StudentService>();
+      services.AddTransient<IDepartmentService, DepartmentService>();
 
       // MediatR Registration
       // this will scan and register all the handlers in the assembly

@@ -1,7 +1,10 @@
 using CA_School_Project.API.Middlewares;
 using CA_School_Project.Application;
+using CA_School_Project.Domain;
+using CA_School_Project.Domain.Entities.Identity;
 using CA_School_Project.Infrastructure;
 using CA_School_Project.Infrastructure.Context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,15 +33,39 @@ public class Program
 
       #endregion
 
-      builder.Services.AddDbContext<ApplicationDbContext>(options =>
+      #region Identity
+
+      builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
       {
-         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-      });
+         // Password settings.
+         options.Password.RequireDigit = true;
+         options.Password.RequireLowercase = true;
+         options.Password.RequireNonAlphanumeric = true;
+         options.Password.RequireUppercase = true;
+         options.Password.RequiredLength = 6;
+         options.Password.RequiredUniqueChars = 1;
+
+         // Lockout settings.
+         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+         options.Lockout.MaxFailedAccessAttempts = 5;
+         options.Lockout.AllowedForNewUsers = true;
+
+         // User settings.
+         options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+         options.User.RequireUniqueEmail = true;
+         options.SignIn.RequireConfirmedEmail = true;
+
+      })
+      .AddEntityFrameworkStores<ApplicationDbContext>()
+      .AddDefaultTokenProviders();
+
+      #endregion
 
       #region Dependencies (Dependency Injection)
 
-      builder.Services.AddInfrastructureDependencies()
-                      .AddApplicationDependencies();
+      builder.Services.AddInfrastructureDependencies(builder.Configuration)
+                      .AddApplicationDependencies()
+                      .AddDomainDependencies();
 
       #endregion
 
@@ -64,6 +91,23 @@ public class Program
 
       #endregion
 
+
+      #region CORS Configuration
+
+      var school_mobile = "School_Mobile";
+      builder.Services.AddCors(options =>
+      {
+         options.AddPolicy(name: school_mobile,
+                           policy =>
+                           {
+                              policy.AllowAnyOrigin()
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                           });
+      });
+
+      #endregion
+
       var app = builder.Build();
 
       // Configure the HTTP request pipeline.
@@ -83,6 +127,10 @@ public class Program
 
       app.UseHttpsRedirection();
 
+      app.UseCors(school_mobile);
+
+
+      app.UseAuthentication();
       app.UseAuthorization();
 
 

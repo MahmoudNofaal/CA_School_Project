@@ -1,25 +1,43 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CA_School_Project.Domain.Commons;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CA_School_Project.Domain.Entities;
 
-public partial class Department
+public partial class Department : GeneralLocalizableEntity
 {
    public Department()
    {
       Students = new HashSet<Student>();
       DepartmentSubjects = new HashSet<DepartmentSubject>();
+      Instructors = new HashSet<Instructor>();
    }
 
    [Key]
-   public int DID { get; set; }
+   [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+   public int Id { get; set; }
 
-   [StringLength(500)]
-   public string DName_Ar { get; set; }
-   [StringLength(500)]
-   public string DName_En { get; set; }
+   [StringLength(200)]
+   public string? Name_Ar { get; set; }
+   [StringLength(200)]
+   public string? Name_En { get; set; }
 
+   // Foreign Key for the Manager
+   public int? ManagerId { get; set; }
+
+   [InverseProperty(nameof(Entities.Student.Department))]
    public virtual ICollection<Student> Students { get; set; }
+
+   // Pointed to DepartmentSubject
+   [InverseProperty(nameof(Entities.DepartmentSubject.Department))]
    public virtual ICollection<DepartmentSubject> DepartmentSubjects { get; set; }
+
+   // Pointed to Instructor.Department (The employment relationship)
+   [InverseProperty(nameof(Entities.Instructor.Department))]
+   public virtual ICollection<Instructor> Instructors { get; set; }
+
+   [ForeignKey(nameof(ManagerId))]
+   [InverseProperty(nameof(Entities.Instructor.DepartmentManager))]
+   public virtual Instructor? Manager { get; set; }
 
 }

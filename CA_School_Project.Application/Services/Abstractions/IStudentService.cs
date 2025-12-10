@@ -19,6 +19,8 @@ public interface IStudentService
    Task<bool> IsNameExistsExcludeSelfAsync(string name, int id);
 
    IQueryable<Student> GetStudentsAsQueryable();
+   IQueryable<Student> GetStudentsByDepartmentIdAsQueryable(int departmentId);
+
    IQueryable<Student> FilterStudentPaginatedQuerable(StudentOrderingEnum orderBy, string search);
 
 }

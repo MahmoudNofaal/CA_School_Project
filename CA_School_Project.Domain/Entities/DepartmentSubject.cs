@@ -6,16 +6,17 @@ namespace CA_School_Project.Domain.Entities;
 public class DepartmentSubject
 {
    [Key]
-   public int DeptSubID { get; set; }
+   public int DepartmentId { get; set; }
 
-   public int DID { get; set; }
-   public int SubID { get; set; }
+   [Key]
+   public int SubjectId { get; set; }
 
+   [ForeignKey(nameof(DepartmentId))]
+   [InverseProperty(nameof(Entities.Department.DepartmentSubjects))]
+   public virtual Department? Department { get; set; }
 
-   [ForeignKey("DID")]
-   public virtual Department Department { get; set; }
-
-   [ForeignKey("SubID")]
-   public virtual Subject Subject { get; set; }
+   [ForeignKey(nameof(SubjectId))]
+   [InverseProperty(nameof(Entities.Subject.DepartmetsSubjects))]
+   public virtual Subject? Subject { get; set; }
 
 }

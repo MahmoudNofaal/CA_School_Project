@@ -12,7 +12,8 @@ public partial class StudentProfile
    public void AddStudentCommandMapping()
    {
       CreateMap<AddStudentCommand, Student>()
-         .ForMember(dest => dest.DID, opt => opt.MapFrom(src => src.DepartmentId));
+         .ForMember(dest => dest.Name_Ar, opt => opt.MapFrom(src => src.Name_Ar))
+         .ForMember(dest => dest.Name_En, opt => opt.MapFrom(src => src.Name_En));
 
    }
 
