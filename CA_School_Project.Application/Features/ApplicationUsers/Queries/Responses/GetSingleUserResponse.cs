@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CA_School_Project.Domain.Entities.Identity;
+namespace CA_School_Project.Application.Features.ApplicationUsers.Queries.Responses;
 
-public class ApplicationUser : IdentityUser<int>
+public class GetSingleUserResponse
 {
    public string FullName { get; set; }
+   public string Email { get; set; }
    public string? Address { get; set; }
    public string? Country { get; set; }
 

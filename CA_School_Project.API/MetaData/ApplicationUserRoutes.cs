@@ -1,8 +1,8 @@
 ﻿namespace CA_School_Project.API.MetaData;
 
-public static class StudentRoutes
+public static class ApplicationUserRoutes
 {
-   public const string Prefix = ApiRoutes.Base + "/students";
+   public const string Prefix = ApiRoutes.Base + "/users";
 
    public const string GetList = Prefix + "/list";
    public const string Paginated = Prefix + "/paginated";
